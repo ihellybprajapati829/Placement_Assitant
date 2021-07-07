@@ -6,10 +6,6 @@ error_reporting(0);
 
 session_start();
 
-if (isset($_SESSION['username'])) {
-    header("Location: welcome.php");
-}
-
 if (isset($_POST['submit'])) {
 	$email = $_POST['email'];
 	$password = md5($_POST['password']);
@@ -21,6 +17,9 @@ if (isset($_POST['submit'])) {
 		$result = mysqli_query($conn, $sql);
 		if (!$result->num_rows > 0) {
 
+            $row = mysqli_fetch_assoc($result);
+            $_SESSION['email'] = $row['email'];
+            
 			$sql = "INSERT INTO `users` (`email`, `password`, `selector`) VALUES ('$email', '$password', '$selector')";
 
 			$result = mysqli_query($conn, $sql);
@@ -29,7 +28,13 @@ if (isset($_POST['submit'])) {
 				$email = "";
 				$_POST['password'] = "";
 				$_POST['cpassword'] = "";
-                header("Location: welcome.php");
+
+                if($selector == "Job_Seeker"){
+                    header("Location: create_employee.php");
+                }
+                if($selector == "Company"){
+                    header("Location: create_company.php");
+                }
 			} 
 			else 
 			{
@@ -58,7 +63,7 @@ if (isset($_POST['submit'])) {
 
     <link rel="stylesheet" type="text/css" href="style.css">
 
-    <title>Hire Here</title>
+    <title>Placemento</title>
 
     <link href="./img/Favicon.png" rel="icon">
 </head>
@@ -104,3 +109,7 @@ if (isset($_POST['submit'])) {
 </body>
 
 </html>
+
+<?php 
+        $_SESSION['email'] = $_POST['email'];
+?>

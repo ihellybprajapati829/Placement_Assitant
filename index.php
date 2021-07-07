@@ -17,9 +17,16 @@ if (isset($_POST['submit'])) {
 	if ($result->num_rows > 0) {
 		$row = mysqli_fetch_assoc($result);
 		$_SESSION['email'] = $row['email'];
-		header("Location: welcome.php");
+		
+		if($row['selector'] == "Job_Seeker"){
+			header("Location: employee_home.php");
+		}
+		if($row['selector'] == "Company"){
+			header("Location: welcome.php");
+		}
 
-	} else {
+	} 
+	else {
 		echo "<script>alert('Woops!! Email or Password is Wrong.')</script>";
 	}
 }
@@ -36,13 +43,13 @@ if (isset($_POST['submit'])) {
 
 	<link rel="stylesheet" type="text/css" href="style.css">
 
-	<title>Hire Here</title>
+	<title>Placemento</title>
 
 	<link href="./img/Favicon.png" rel="icon">
 </head>
 <body>
 	<div class="logo" align="center">
-        <img src="./img/Hire Here.png" alt="logo" />
+        <img src="./img/Placemento.png" alt="logo" />
     </div>
     <br />
     <br />

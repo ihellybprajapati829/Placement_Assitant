@@ -3,7 +3,7 @@
 $server = "localhost";
 $user = "root";
 $pass = "";
-$database = "signin_up";
+$database = "Hire_Here";
 
 $conn = mysqli_connect($server, $user, $pass, $database);
 
