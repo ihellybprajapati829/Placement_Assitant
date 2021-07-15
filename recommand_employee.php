@@ -15,8 +15,9 @@
         }
     ?>
 
+
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light" style="">
+    <nav class="navbar navbar-expand-lg navbar-light" style="background:transparent;">
         <div class="container-fluid" style="">
             <a class="navbar-brand" href="#"></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
@@ -26,10 +27,10 @@
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
                     <img src="./img/Placemento.png" alt="Logo" class="logo"/>
-                    <a class="nav-link active" aria-current="page" href="employee_home.php">Home</a>
+                    <a class="nav-link" aria-current="page" href="employee_home.php">Home</a>
                     <a class="nav-link" href="employee_dashboard.php">Dashboard</a>
                     <a class="nav-link" href="employee_jobs.php">Jobs</a>
-                    <a class="nav-link" href="recommand_employee.php">Recommendations</a>
+                    <a class="nav-link active" href="recommand_employee.php">Recommendations</a>
                     <a class="nav-link" href="employee_profile.php" id="icon"><i class="fa fa-user"></i></a>
                     <a href="logout.php"><input class="logout" type="submit" name="submit" value="Log Out"
                             style="background-color: black;color: #defff1;border-radius: 8px;line-height: 1.5;position: absolute;margin-top: 0.3%;padding: 0.4%;">
@@ -38,30 +39,26 @@
             </div>
         </div>
     </nav>
-    <div class="bac">
-        <br><br><br><br>
-        <div class="middle">
-            <nav class="navbar navbar-light"  style="background:transparent;">
-                <div class="container-fluid">
-                    <form class="d-flex" action="" method="POST">
-                        <input class="form-control me-4" type="search" name="area" placeholder="Search by Area" style = "" aria-label="Search" />
-                        <input class="form-control me-4" type="search"  name="job" placeholder="Search by Job Title " style = "" aria-label="Search" />
-                        <input type="submit" name="submit" value="Search" style="">
-                    </form>
-                </div>
-            </nav>
-        </div>
-    </div>
+    <?php
 
-    <?php 
-        include 'config.php';
+            include 'config.php';
 
-        if(isset($_POST['submit']))
-        {
-            $jtitle=$_POST['job'];
-            $jloc=$_POST['area'];
+            $email =$_SESSION['email'];
+            $sql = "SELECT * FROM `employee` WHERE eemail='$email'";
 
-            $query = "SELECT * FROM `job` WHERE jtitle like '%$jtitle%' && jloc like '%$jloc%' ";
+            $result = mysqli_query($conn, $sql);
+
+            if ($result->num_rows > 0) {
+                $row = mysqli_fetch_assoc($result);
+                $_SESSION['interest1'] = $row['interest1'];
+                $_SESSION['interest2'] = $row['interest2'];
+                $_SESSION['interest3'] = $row['interest3'];
+            } 
+            $interest1 = $_SESSION['interest1'];
+            $interest2 = $_SESSION['interest2'];
+            $interest3 = $_SESSION['interest3'];
+
+            $query = "SELECT * FROM `job` WHERE jfield like '%$interest1%' || jfield like '%$interest2%' || jfield like '%$interest3%' ";
             
             $query_run = mysqli_query($conn,$query);
 
@@ -84,14 +81,12 @@
                     <br/> 
                 <?php              
                 }
-            }
-        }    
-             
+            }             
     ?>
 
     <br/>
     <br/>    
-    <br/>
+
     <div class="footer">
         <div class="footer-content">
             Placemento

@@ -1,3 +1,4 @@
+
 <?php 
 
 include 'config.php';
@@ -69,13 +70,12 @@ if (isset($_POST['submit'])) {
 </head>
 
 <body>
+    <div class="logo" align="center">
+        <img src="./img/Placemento.png" alt="logo" />
+    </div>
+    <br />
     <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <div class="container">
+    <div class="container1">
         <form action="" method="POST" class="login-email">
             <p class="login-text" style="font-size: 28px; font-weight: 700;">Register</p>
             <div class="input-group">

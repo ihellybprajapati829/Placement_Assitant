@@ -22,7 +22,7 @@ if (isset($_POST['submit'])) {
 			header("Location: employee_home.php");
 		}
 		if($row['selector'] == "Company"){
-			header("Location: welcome.php");
+			header("Location: company_home.php");
 		}
 
 	} 
@@ -53,7 +53,7 @@ if (isset($_POST['submit'])) {
     </div>
     <br />
     <br />
-	<div class="container">
+	<div class="container1">
 		<form action="" method="POST" class="login-email">
 			<p class="login-text" style="font-size: 28px; font-weight: 700;">Login</p>
 			<div class="input-group">

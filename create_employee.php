@@ -1,3 +1,5 @@
+<?php include('include/head.php')?>
+
 <?php
 
 session_start();
@@ -20,92 +22,151 @@ if(isset($_POST['submit']))
     $profilepic=$_FILES['profilepic'];
     $filename=$profilepic['name'];
     $filepath=$profilepic['tmp_name'];
+    $filesize=$profilepic['size'];
     $fileerror=$profilepic['error'];
-    if($fileerror==0 && $_SESSION['email']==$emailid)
+    $filetype=$profilepic['type'];
+    $fileExt=explode('.',$filename);
+    $fileactualExt=strtolower(end($fileExt));//12:22 pela
+    $allowed=array('jpg','jpeg','png');//pdf allowed krvu hoy to
+    if(in_array($fileactualExt,$allowed) && $_SESSION['email']==$emailid)
     {
-        $destfile='upload/'.$filename;
-        move_uploaded_file($filepath,$destfile);
-        $insertquery3="INSERT INTO `employee`(`ename`, `city`, `contactno`, `eemail`, `dob`, `interest1`, `interest2`, `interest3`, `experience`, `about`, `education`, `profilepic`)
-        VALUES ('$ename','$city','$contactno','$emailid','$dob','$interest1','$interest2','$interest3','$experience','$about','$education','$destfile')";
-        
-        $res1=mysqli_query($conn,$insertquery3);
-        
-        if($res1)
+        if($fileerror==0)
         {
-            ?>
-            <script>
-                alert("Data is inserted!!!")
-            </script>
-            <?php
-            header ('location: employee_home.php');
+            if($filesize<1000000)
+            {
+                $filenamenew=uniqid('',true).".".$fileactualExt;
+                $destfile='upload/'.$filenamenew;
+                move_uploaded_file($filepath,$destfile);
+                
+                if($interest2==NULL){
+                    $interest2 = "None";
+                }
+                if($interest3==NULL){
+                    $interest3 = "None";
+                }
+
+                $insertquery3="INSERT INTO `employee`(`ename`, `city`, `contactno`, `eemail`, `dob`, `interest1`, `interest2`, `interest3`, `experience`, `about`, `education`, `profilepic`)
+                VALUES ('$ename','$city','$contactno','$emailid','$dob','$interest1','$interest2','$interest3','$experience','$about','$education','$destfile')";
+
+                $res1=mysqli_query($conn,$insertquery3);
+
+                if($res1)
+                {
+                    ?>
+                    <script>
+                        alert("Data is inserted!!!")
+                    </script>
+                    <?php
+                    header ('location: employee_home.php');
+                }
+                else{
+                    ?>
+                    <script>
+                        alert("Data is not inserted!!")
+                    </script> 
+                    <?php 
+                }
+        
+            }
+            else{
+                ?>
+                <script>
+                    alert("File size is too big.")
+                </script>
+                <?php
+            }
         }
         else{
             ?>
             <script>
-                alert("Data is not inserted!!")
-            </script> 
-            <?php 
-        }
-        
+                alert("Please, Enter Your Registered Mailid!!")
+            </script>
+            <?php
+        }   
+
     }
     else{
         ?>
         <script>
-            alert("Please, Enter Your Registered Mailid!!")
+            alert("You cannot upload file of this extension. Please upload it in jpg, jpeg or png form.")
         </script>
         <?php
     }
-}
+}    
 ?>
-   
-
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <link rel="stylesheet" type="text/css" href="style.css">
-
-    <title>Placemento</title>
-
-    <link href="./img/Favicon.png" rel="icon">
-</head>
 <body>
-    <div class="container">
-        <div class="title">create your profile</div>
-        <form action="" method="POST" enctype="multipart/form-data" id="employee">
-              <label for="ename" >employee-name:</label>
-              <input type="text" id="ename" name="ename" placeholder="enter your name" required>
-              <label for="city">city</label>
-              <input type="text" id="city" name="city" placeholder="enter your city" required>
-              <label for="contactno">contact-no:</label>
-              <input type="text" id="contactno" name="contactno" placeholder="enter your city" required>
-              <label for="emailid">email:</label>
-              <input type="email" id="emailid" name="emailid" placeholder="email address" required>
-              <label for="dob">Date of Birth:</label>
-              <input type="date" id="dob" name="dob" value="mm/dd/yyyy" required>
-              <label for="interest1">area of interest</label>
-              <input type="text" id="interest1" name="interest1" placeholder="enter your area of interest" required>
-              <label for="interest2">another are of inerest want to add?</label>
-              <input type="text" id="interest2" name="interest2" placeholder="enter your area of inerest">
-              <label for="interest3">another are of inerest want to add?</label>
-              <input type="text" id="interest3" name="interest3" placeholder="enter your area of inerest">
-              <label for="experience">work-experience:</label>
-              <input type="text" id="experience" name="experience" placeholder="years of experience" >
-              <label for="about">about yourself</label>
-              <textarea id="about" name="about" placeholder="describe yourself" style="height:200px"></textarea>
-              <label for="education">educational-info</label>
-              <textarea id="education" name="education" placeholder="educational details" style="height:200px"></textarea>
-              <label for="profilepic">profilepic</label>
+    <nav style="background-color:#fff; box-shadow:0 0 5px 0 rgba(0, 0, 0, 0.3);">
+        <div class="toplogo" style="padding-left:42%; padding-bottom:0.7%;">
+            <img src="./IMG/Placemento.png" style="width:28%; height:auto;">
+        </div>
+    </nav>
+    <div class="container"  id="company">
+        <form action="" method="POST" enctype="multipart/form-data" class="company-create">
+        <div class="heading">
+            Create Your Profile
+        </div>
+        <div class="row" >
+            <div class="col-sm-12">
+              <label for="ename" class="form-label" >Your name </label>
+              <input type="text" class="form-control" class="form-control" id="ename" name="ename" required>
+              <br/>
+              
+              <label for="city" class="form-label">City </label>
+              <input type="text" class="form-control" id="city" name="city" required>
+              <br/>
+              
+              <label for="contactno" class="form-label">Contact no </label>
+              <input type="text" class="form-control" id="contactno" name="contactno" required>
+              <br/>
+
+              <label for="emailid" class="form-label">E-mail</label>
+              <input type="email" class="form-control" id="emailid" name="emailid" required>
+              <br/>
+
+              <label for="dob" class="form-label">Date of Birth</label>
+              <input type="date" class="form-control" id="dob" name="dob" value="mm/dd/yyyy" required>
+              <br/>
+
+              <label for="interest1" class="form-label">Area of Interest</label>
+              <input type="text" class="form-control" id="interest1" list="interest" name="interest1" required>
+              <datalist id="interest">
+                <option>Web Development</option>
+                <option>Graphic Designing</option>
+                <option>Aritificial Intelligence</option>
+                <option>Machine Learning</option>
+              </datalist>      
+              <br/>
+
+              <label for="interest2" class="form-label">Another are of inerest want to ad</label>
+              <input type="text" class="form-control" id="interest2" list="interest" name="interest2">
+              <br/>
+
+              <label for="interest3" class="form-label">Another are of inerest want to ad</label>
+              <input type="text" class="form-control" id="interest3" list="interest" name="interest3">
+              <br/>
+
+              <label for="experience" class="form-label">Work-Experience</label>
+              <input type="text" class="form-control" id="experience" name="experience">
+              <br/>
+
+              <label for="about" class="form-label">About Yourself</label>
+              <textarea id="about" class="form-control" name="about"></textarea>
+              <br/>
+
+              <label for="education" class="form-label">Educational-Info</label>
+              <textarea id="education" class="form-control" name="education"></textarea>
+              <br/>
+
+              <label for="profilepic" class="form-label">Upload Profile Picture : &nbsp;&nbsp;</label>
               <input type="file" name="profilepic">
               <br/>
-              <input type="submit" name="submit" value="Register">
-        </form>
+              <br/>
+              
+              <input class="btn btn-success" type="submit" name="submit" value="Create Profile">
+              <br/> 
         </div>
+        </form>
     </div>
-    
+
 </body>
 </html>

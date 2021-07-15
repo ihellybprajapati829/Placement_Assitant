@@ -15,8 +15,9 @@
         }
     ?>
 
+
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light" style="">
+    <nav class="navbar navbar-expand-lg navbar-light" style="background:transparent;">
         <div class="container-fluid" style="">
             <a class="navbar-brand" href="#"></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
@@ -26,8 +27,8 @@
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
                     <img src="./img/Placemento.png" alt="Logo" class="logo"/>
-                    <a class="nav-link active" aria-current="page" href="employee_home.php">Home</a>
-                    <a class="nav-link" href="employee_dashboard.php">Dashboard</a>
+                    <a class="nav-link" aria-current="page" href="employee_home.php">Home</a>
+                    <a class="nav-link active" href="employee_dashboard.php">Dashboard</a>
                     <a class="nav-link" href="employee_jobs.php">Jobs</a>
                     <a class="nav-link" href="recommand_employee.php">Recommendations</a>
                     <a class="nav-link" href="employee_profile.php" id="icon"><i class="fa fa-user"></i></a>
@@ -38,60 +39,50 @@
             </div>
         </div>
     </nav>
-    <div class="bac">
-        <br><br><br><br>
-        <div class="middle">
-            <nav class="navbar navbar-light"  style="background:transparent;">
-                <div class="container-fluid">
-                    <form class="d-flex" action="" method="POST">
-                        <input class="form-control me-4" type="search" name="area" placeholder="Search by Area" style = "" aria-label="Search" />
-                        <input class="form-control me-4" type="search"  name="job" placeholder="Search by Job Title " style = "" aria-label="Search" />
-                        <input type="submit" name="submit" value="Search" style="">
-                    </form>
-                </div>
-            </nav>
-        </div>
-    </div>
+    <?php
 
-    <?php 
-        include 'config.php';
+            include 'config.php';
 
-        if(isset($_POST['submit']))
-        {
-            $jtitle=$_POST['job'];
-            $jloc=$_POST['area'];
+            $email =$_SESSION['email'];
+            $query = "SELECT * FROM `apply` WHERE eemail='$email'";
 
-            $query = "SELECT * FROM `job` WHERE jtitle like '%$jtitle%' && jloc like '%$jloc%' ";
-            
             $query_run = mysqli_query($conn,$query);
 
             if(mysqli_num_rows($query_run) > 0)
             {
                 while($row = mysqli_fetch_assoc($query_run))
                 {
+                    $jobid=$row['jobid'];
+                    $query1="SELECT * FROM job WHERE jobid='$jobid'";
+                    $query_run1 = mysqli_query($conn,$query1);
+                    if(mysqli_num_rows($query_run1)>0)
+                    {
+                        while($row1=mysqli_fetch_assoc($query_run1))
+                        {
                     ?>
                     <div class="card-group row">
                         <div class="card" style="">
                             <div class="card-body">
-                                <h5 class="card-title"><?php echo $row['jtitle'];?></h5>
-                                <a href="./apply_job.php?id=<?php echo $row['jobid'];?>" class="btn btn-primary side">APPLY</a>
-                                <h6 class="card-title2"><?php echo $row['cname'];?></h6>
-                                <h6 class="card-title2"><?php echo $row['srange'];?></h6>
-                                <p class="card-text"><?php echo $row['jdesc'];?></p>
+                                <h5 class="card-title"><?php echo $row1['jtitle'];?></h5>
+                                <a href="#" class="btn btn-primary side">Applied</a>
+                                <h6 class="card-title2"><?php echo $row1['cname'];?></h6>
+                                <h6 class="card-title2"><?php echo $row1['srange'];?></h6>
+                                <p class="card-text"><?php echo $row1['jdesc'];?></p>
                             </div>
                         </div>
                     </div> 
                     <br/> 
-                <?php              
+                    <?php
+                    }
+                              
                 }
-            }
-        }    
-             
+            } 
+        }            
     ?>
 
     <br/>
     <br/>    
-    <br/>
+
     <div class="footer">
         <div class="footer-content">
             Placemento

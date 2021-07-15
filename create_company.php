@@ -1,3 +1,5 @@
+<?php include('include/head.php')?>
+
 <?php
 
     session_start();
@@ -18,8 +20,16 @@
       $filename=$cprofilepic['name'];
       $filepath=$cprofilepic['tmp_name'];
       $fileerror=$cprofilepic['error'];
-      if($fileerror==0 && $_SESSION['email']==$cemail)
+      $filetype=$cprofilepic['type'];
+      $fileExt=explode('.',$filename);
+      $fileactualExt=strtolower(end($fileExt));//12:22 pela
+      $allowed=array('jpg','jpeg','png');//pdf allowed krvu hoy to
+      if(in_array($fileactualExt,$allowed)&&$_SESSION['email']==$cemail)
       {
+        if($fileerror==0)
+        {
+          if($filesize<1000000)
+          {
             $destfile='upload/'.$filename;
             move_uploaded_file($filepath,$destfile);
             $sql= "INSERT INTO `company` (`cname`, `cindustry`, `cfounded`, `cceo`, `clocation`, `cemail`, `ccontact`, `cprofilepic`, `cdescription`) VALUES ('$cname', '$cindustry', '$cfounded', '$cceo', '$clocation', '$cemail', '$ccontact', '$destfile', '$cdescription')";
@@ -31,9 +41,24 @@
                     alert("Data is inserted!!!")
                 </script>
                 <?php
-                    header ('location: employee_home.php');
+                    header ('location: company_home.php');
             }
-      }
+            else{
+              ?>
+              <script>
+                  alert("Data is not inserted!!")
+              </script> 
+              <?php 
+            }
+          }
+          else{
+            ?>
+            <script>
+            alert("File size is too big.")
+            </script>
+            <?php
+          }
+        }  
       else{
         ?>
         <script>
@@ -41,31 +66,24 @@
         </script>
         <?php
         }
+      }
+      else{
+        ?>
+        <script>
+              alert("You cannot upload file of this extension. Please upload it in jpg, jpeg or png form.")
+        </script>
+        <?php
+      }
     }
-
 ?>
 
-
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="wnameth=device-wnameth, initial-scale=1">
-
-    <title>Placemento</title>
-
-    <link href="./img/Favicon.png" rel="icon">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    
-    <link rel="stylesheet" type="text/css" href="style.css">    
-</head>
 <body>
 <div>
 
 </div>
 <nav style="background-color:#fff; box-shadow:0 0 5px 0 rgba(0, 0, 0, 0.3);">
 <div class="toplogo" style="padding-left:42%; padding-bottom:0.7%;">
- <img src="Placemento.png" style="width:28%; height:auto;">
+ <img src="./IMG/Placemento.png" style="width:28%; height:auto;">
  </div>
 </nav>
 <div class="container" id="company">
@@ -90,7 +108,7 @@
             <label for="clocation" class="form-label">Location</label>
             <input type="text" class="form-control" name="clocation"><br> 
  
-            <label for="cemail" class="form-label">Email name</label>
+            <label for="cemail" class="form-label">Email</label>
             <input type="text" class="form-control" name="cemail" required><br> 
   
             <label for="ccontact" class="form-label" >Contanct No.</label>
